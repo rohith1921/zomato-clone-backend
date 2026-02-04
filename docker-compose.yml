@@ -1,0 +1,47 @@
+version: '3.8'
+
+services:
+  # 1. THE JAVA APP (New Service)
+  food-app:
+    build: ./api-gateway      # Folder containing Dockerfile
+    container_name: food_ordering_app
+    ports:
+      - "8080:8080"           # Expose to localhost
+    depends_on:
+      - postgres
+      - redis
+    environment:
+      # Override config to use internal Docker names
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://food_db_final:5432/food_ordering_db
+      - SPRING_DATA_REDIS_HOST=food_redis_final
+      - SPRING_DATASOURCE_USERNAME=food_user
+      - SPRING_DATASOURCE_PASSWORD=food_pass
+      # Ensure tables are created automatically
+      - SPRING_JPA_HIBERNATE_DDL_AUTO=update
+    restart: always
+
+  postgres:
+    image: postgres:15-alpine
+    container_name: food_db_final  # New Name
+    ports:
+      - "5435:5432"  # <--- CRITICAL: Mapped to 5435 to avoid conflicts
+    environment:
+      - POSTGRES_USER=food_user
+      - POSTGRES_PASSWORD=food_pass
+      - POSTGRES_DB=food_ordering_db
+    volumes:
+      - food_data_final_v3:/var/lib/postgresql/data # <--- New Volume Name
+    restart: always
+
+  redis:
+    image: redis:7-alpine
+    container_name: food_redis_final
+    ports:
+      - "6379:6379"
+    volumes:
+      - food_redis_data_final_v3:/data
+    restart: always
+
+volumes:
+  food_data_final_v3:
+  food_redis_data_final_v3:
