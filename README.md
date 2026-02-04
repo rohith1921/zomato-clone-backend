@@ -169,3 +169,12 @@ food-ordering-system
 ├── payment/           # Payment Gateway Integration
 ├── docker-compose.yml # Infrastructure definition
 └── load_test.py       # Python Stress Test Script
+```
+
+## 🔮 Future Roadmap
+
+* **Kubernetes Support:** Deploy using Helm Charts.
+* **Event-Driven Architecture:** Decouple Order and Payment services using Kafka.
+* **Distributed Tracing:** Integrate Zipkin/Jaeger for observability.
+
+---
